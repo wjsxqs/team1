@@ -6,7 +6,9 @@ use node_template_runtime::{
 use sp_consensus_aura::sr25519::AuthorityId as AuraId;
 use sp_finality_grandpa::AuthorityId as GrandpaId;
 use sp_runtime::traits::{Verify, IdentifyAccount};
+use sp_core::crypto::UncheckedInto;
 use sc_service::ChainType;
+use hex_literal::hex;
 
 // The URL for the telemetry server.
 // const STAGING_TELEMETRY_URL: &str = "wss://telemetry.polkadot.io/submit/";
@@ -121,6 +123,54 @@ pub fn local_testnet_config() -> Result<ChainSpec, String> {
         // Properties
         None,
         // Extensions
+        None,
+    ))
+}
+
+pub fn tao_staging_testnet_config() -> Result<ChainSpec, String> {
+    let wasm_binary = WASM_BINARY.ok_or("Development wasm binary not available".to_string())?;
+
+    Ok(ChainSpec::from_genesis(
+        // Name
+        "Tao Staging Testnet",
+        // ID
+        "tao_staging",
+        ChainType::Live,
+        move || testnet_genesis(
+            wasm_binary,
+            // Initial PoA authorities
+            vec![(
+                // 5CAGc2P2g6jUVSmdcpHbGD1MWvTe7jAAmoD6riLnXUjc5PV4
+                hex!["043e7709226be05310d0632dc1f7cb1b0016b74c0c051835e1093428a472d230"].unchecked_into(),
+                // 5G8WWBAq4gpFLEnQjsxPkfYRdXNs3UkaeR8QG39HVjub8agw
+                hex!["b3d7b25de30f345bfb40e0fb78f86acc36a7edc045615d5dee2cb9539faa8219"].unchecked_into(),
+            ),(
+                // 5EL1RhP3yJNVF7k1nB9U8Dm5AbcFUEbD7ZQ4f3TUeHVYV6Vj
+                hex!["64244ac1fb0854c2f101beafa5d8032d0e381705514f74cf58c8f8361d65c769"].unchecked_into(),
+                // 5EaM6zor3sPnqfYLM1CRu1RFPsyMkNa1B1r3J4itBSLs8mx8
+                hex!["6f13f7e727ef6b4094b346e351e66242b51fbbb6a2eac532b55389f1314d2d11"].unchecked_into(),
+            )],
+            // Sudo account
+            hex![
+                // 5EUp2vXWQEmbT6ceUA5t3XCaHzvAbBgtXPYenE4ui6mhwX89
+                "6adb264c6a79923eb1b3d47feab4db75b0fd140ba31a1f0bfee91ba3070f3541"
+            ].into(),
+            // Pre-funded accounts
+            vec![
+                // 5EUp2vXWQEmbT6ceUA5t3XCaHzvAbBgtXPYenE4ui6mhwX89
+                hex!["6adb264c6a79923eb1b3d47feab4db75b0fd140ba31a1f0bfee91ba3070f3541"].into(),
+            ],
+            true,
+        ),
+        // Bootnodes
+        vec![],
+        // Telemetry
+        None,
+        // Protocol ID
+        None,
+        // Properties
+		None,
+		// Extensions
         None,
     ))
 }
